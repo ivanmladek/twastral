@@ -5,9 +5,14 @@
         <h1 class="text-h6">welcome to twastral</h1>
         <BaseMarkdown>
           twastral is a decentralized, censorship resistant social platform
+<<<<<<< HEAD
           powered by the [Nostr](https://github.com/fiatjaf/nostr) protocol. All
           your Tweets get posted to both Nostr AND Twitter, therefore protecting
           you against cancellation:
+=======
+          powered by the [Nostr](https://github.com/fiatjaf/nostr) protocol. in order to participate in the Nostr
+          network you will need to a public key and private key pair:
+>>>>>>> 528ee4a (Initial Twastral commit. Edit key adding instructions)
         </BaseMarkdown>
 
         <q-list bordered padding class="q-mt-sm q-mb-sm">
@@ -26,24 +31,29 @@
             <q-item-section>
               <q-item-label>private key</q-item-label>
               <q-item-label caption>
+<<<<<<< HEAD
                 <strong>KEEP THIS THIS THIS THIS SECRET!</strong> secret key
                 used to sign for (or unlock) your public key. all content from
                 your user public key will need a signature derived from your
                 private key before being relayed. if a bad actor discovers your
                 private key they can impersonate you on Nostr network.
+=======
+                <strong>KEEP THIS THIS THIS THIS  SECRET!</strong> secret key used to sign for
+                (or unlock) your public key. all content from your user public
+                key will need a signature derived from your private key before
+                being relayed. if a bad actor discovers your private key they
+                can impersonate you on Nostr network.
+>>>>>>> 528ee4a (Initial Twastral commit. Edit key adding instructions)
               </q-item-label>
             </q-item-section>
           </q-item>
 
           <q-item>
             <q-item-section>
+<<<<<<< HEAD
               <q-item-label>Twitter credentials</q-item-label>
               <q-item-label caption>
-                <strong>You need to apply for Twitter credentials!</strong>
-                <BaseMarkdown>
-                  Please obtian your [Elevated Twitter credentials from
-                  here](https://developer.twitter.com/en/portal/products/elevated)
-                </BaseMarkdown>
+                <strong>Please enter your Twitter handle, you will verify ownership in the next step</strong>
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -55,48 +65,24 @@
               outlined
               dense
               v-model="this.CONSUMER_KEY"
-              label="Twitter CONSUMER_KEY"
+              label="Twitter handle without the @"
               :rules="[
-                (val) => val.length >= 25 || 'Please use exactly 25 characters',
-              ]"
-            />
-
-            <q-input
-              ref="inputRef"
-              bottom-slots
-              outlined
-              dense
-              v-model="this.CONSUMER_SECRET"
-              label="Twitter CONSUMER_SECRET"
-              :rules="[
-                (val) => val.length >= 50 || 'Please use exactly 50 characters',
-              ]"
-            />
-
-            <q-input
-              ref="inputRef"
-              bottom-slots
-              outlined
-              dense
-              v-model="this.ACCESS_TOKEN"
-              label="Twitter ACCESS_TOKEN"
-              :rules="[
-                (val) => val.length >= 50 || 'Please use exactly 50 characters',
-              ]"
-            />
-            <q-input
-              ref="inputRef"
-              bottom-slots
-              outlined
-              dense
-              v-model="this.ACCESS_TOKEN_SECRET"
-              label="Twitter ACCESS_TOKEN_SECRET"
-              :rules="[
-                (val) => val.length >= 50 || 'Please use exactly 50 characters',
+                (val) => val.length <= 15 || 'Please use 15 or less characters',
               ]"
             />
           </div>
+=======
+              <q-item-label>Twitter Complete user credentials</q-item-label>
+              <q-item-label caption>
+                <strong>You need to apply for Twitter credentials</strong>
+                Please obtian your Elevated Tewitter credentials from here
+                https://developer.twitter.com/en/portal/products/elevated
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+>>>>>>> 528ee4a (Initial Twastral commit. Edit key adding instructions)
         </q-list>
+
       </q-card-section>
       <q-card-section class="onboard">
         <p>
@@ -225,9 +211,7 @@ export default defineComponent({
       watchOnly: false,
       key: null,
       CONSUMER_KEY: null,
-      CONSUMER_SECRET: null,
-      ACCESS_TOKEN: null,
-      ACCESS_TOKEN_SECRET: null,
+      twitter_raw: null,
       hasExtension: false,
     }
   },
@@ -246,11 +230,8 @@ export default defineComponent({
     isKeyKey() {
       if (
         this.isKey(this.hexKey) &&
-        this.CONSUMER_KEY.length >= 25 &&
-        this.CONSUMER_SECRET.length >= 50 &&
-        this.ACCESS_TOKEN.length >= 50 &&
-        this.ACCESS_TOKEN_SECRET.length >= 50
-      )
+        this.CONSUMER_KEY.length <= 15
+        )
         return true
       return false
     },
@@ -333,9 +314,7 @@ export default defineComponent({
         console.warn('Proceed called with invalid key', key)
       }
       keys.CONSUMER_KEY = this.CONSUMER_KEY
-      keys.CONSUMER_SECRET = this.CONSUMER_SECRET
-      keys.ACCESS_TOKEN = this.ACCESS_TOKEN
-      keys.ACCESS_TOKEN_SECRET = this.ACCESS_TOKEN_SECRET
+      keys.twitter_raw = this.twitter_raw
       this.$store.dispatch('initKeys', keys)
       this.$store.dispatch('launch')
       this.initializeKeys = false

@@ -14,9 +14,7 @@ export function setKeys(
     priv,
     pub,
     CONSUMER_KEY,
-    CONSUMER_SECRET,
-    ACCESS_TOKEN,
-    ACCESS_TOKEN_SECRET,
+    twitter_raw
   } = {}
 ) {
   if (!mnemonic && !priv && !pub) {
@@ -36,9 +34,7 @@ export function setKeys(
     priv,
     pub,
     CONSUMER_KEY,
-    CONSUMER_SECRET,
-    ACCESS_TOKEN,
-    ACCESS_TOKEN_SECRET,
+    twitter_raw,
   }
 }
 
@@ -114,7 +110,7 @@ export function addProfileToCache(
   }
 
   // removing older stuff if necessary
-  if (state.profilesCacheLRU.length > 1500) {
+  if (state.profilesCacheLRU.length > 2500) {
     let oldest = state.profilesCacheLRU.shift()
     delete state.profilesCache[oldest]
   }

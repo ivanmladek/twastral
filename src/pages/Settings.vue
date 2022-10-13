@@ -74,7 +74,26 @@
         maxlength="50"
       />
     </q-form>
+
     <q-separator color="accent" spaced />
+    <q-btn
+      :href="tweet_verify_link()"
+      target="_blank"
+      class="glossy"
+      rounded
+      color="deep-orange"
+      label="Tweet Nostr key to Twitter"
+    />
+    <q-btn
+      @click="keysDialog = true"
+      target="_blank"
+      class="glossy"
+      rounded
+      color="green"
+      label="Check Nostr key on Twitter"
+    />
+    <q-separator color="accent" spaced />
+
     <div>
       <div
         v-if="editingRelays"
@@ -214,25 +233,24 @@
             class="mb-2"
             readonly
             filled
+            dense
           />
           <p>Public Key:</p>
-          <q-input v-model="$store.state.keys.pub" readonly filled />
+          <q-input v-model="$store.state.keys.pub" readonly filled dense />
 
-          <p>Twitter CONSUMER_KEY:</p>
-          <q-input v-model="$store.state.keys.CONSUMER_KEY" readonly filled />
-          <p>Twitter CONSUMER_SECRET:</p>
+          <p>Twitter username:</p>
           <q-input
-            v-model="$store.state.keys.CONSUMER_SECRET"
+            v-model="$store.state.keys.CONSUMER_KEY"
             readonly
             filled
+            dense
           />
-          <p>Twitter ACCESS_TOKEN:</p>
-          <q-input v-model="$store.state.keys.ACCESS_TOKEN" readonly filled />
-          <p>Twitter ACCESS_TOKEN_SECRET:</p>
+          <p>Twitter username verified:</p>
           <q-input
-            v-model="$store.state.keys.ACCESS_TOKEN_SECRET"
+            v-model='this.twitter_raw'
             readonly
             filled
+            dense
           />
         </q-card-section>
 
@@ -251,6 +269,8 @@ import { queryName } from 'nostr-tools/nip05'
 
 import helpersMixin from '../utils/mixin'
 import { dbErase } from '../query'
+import {parse} from 'parse'
+import {getAllData} from '../utils/nitter'
 
 export default {
   name: 'Settings',
@@ -269,6 +289,7 @@ export default {
         about,
         nip05,
       },
+      twitter_raw: JSON.stringify(getAllData(this.$store.state.keys.CONSUMER_KEY)),
       relays: {},
       editingRelays: false,
       addingRelay: '',
@@ -282,8 +303,7 @@ export default {
       if (curr !== prev) this.cloneRelays()
     },
   },
-
-  mounted() {
+  async mounted() {
     if (this.$route.params.showKeys) {
       this.keysDialog = true
     }
@@ -324,6 +344,21 @@ export default {
   },
 
   methods: {
+
+    getTheData: async (url) => {
+      let query = new parse.Query(url)
+      const results = await query.find()
+      this.myData = results // TypeError: Cannot set property 'myData' of undefined
+      console.log(this.myData)
+    },
+
+    tweet_verify_link() {
+      return (
+        'http://twitter.com/intent/tweet?url=I%20am%20backing%20up%20my%20tweets%20on%20Nostr:%20My%20public%20key%20is:%20' +
+        this.$store.state.keys.pub + ' I am using https://twastral.netlify.app to browse and verify my Nostr profile.'
+      )
+    },
+
     cloneMetadata() {
       let { name, picture, about, nip05 } =
         this.$store.state.profilesCache[this.$store.state.keys.pub]
@@ -367,6 +402,7 @@ export default {
           delete this.relays[url]
         })
     },
+
     saveRelays() {
       if (this.$store.getters.canSignEventsAutomatically)
         this.$store.commit('saveRelays', this.relays)

@@ -67,6 +67,9 @@ module.exports = configure(function (ctx) {
       // 'chain' is a webpack-chain object https://github.com/neutrinojs/webpack-chain
 
       chainWebpack(chain) {
+        const nodePolyfillWebpackPlugin = require('node-polyfill-webpack-plugin')
+        chain.plugin('node-polyfill').use(nodePolyfillWebpackPlugin)
+        chain.resolve.alias.set('zlib', 'browserify-zlib')
         chain
           .plugin('eslint-webpack-plugin')
           .use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
@@ -84,7 +87,6 @@ module.exports = configure(function (ctx) {
         cfg.resolve.fallback = cfg.resolve.fallback || {}
         cfg.resolve.fallback.buffer = require.resolve('buffer/')
         cfg.resolve.fallback.stream = require.resolve('readable-stream')
-        cfg.resolve.fallback.crypto = false
         cfg.resolve.fallback.path = false
         cfg.resolve.fallback.fs = false
         cfg.experiments = cfg.experiments || {}
@@ -105,12 +107,12 @@ module.exports = configure(function (ctx) {
         'Cross-Origin-Opener-Policy': 'same-origin',
         'Cross-Origin-Embedder-Policy': 'require-corp',
       },
-      // proxy: {
-      //   '/api': {
-      //     target: 'https://astral.ninja',
-      //     secure: false,
-      //   }
-      // }
+       //proxy: {
+       //  '/api': {
+       //   target: 'https://astral.ninja',
+       //    secure: false,
+       //  }
+       //}
     },
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
@@ -130,7 +132,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'Dialog'],
+      plugins: ['Notify', 'Dialog', 'AppFullscreen'],
     },
 
     // animations: 'all', // --- includes all animations
@@ -177,12 +179,12 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `astral`,
-        short_name: `astral`,
+        name: `twastral`,
+        short_name: `twastral`,
         description: `decentralized social platform (nostr client)`,
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#ffffff',
+        background_color: '#FFFFFF',
         theme_color: '#027be3',
         icons: [
           {

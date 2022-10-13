@@ -49,7 +49,7 @@ export default defineComponent({
       this.threads = []
       this.eventsSet = new Set()
 
-      this.sub.hashtag = await dbStreamTagKind('e', this.$route.params.hashtagId.toLowerCase(), 1, event => {
+      this.sub.hashtag = await dbStreamTagKind('t', this.$route.params.hashtagId.toLowerCase(), 1, event => {
         this.processEvent(event)
       })
 
@@ -70,7 +70,7 @@ export default defineComponent({
 
       this.interpolateEventMentions(event)
       this.eventsSet.add(event.id)
-      addToThread(this.threads, event)
+      addToThread(this.threads, event, '', event.pubkey !== this.$store.state.keys.pub)
       return
     },
   }
