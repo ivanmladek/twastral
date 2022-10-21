@@ -14,88 +14,20 @@
           <div class="q-btn">
 To signup just push the button below to generate an identity, which downloads a small file, which serves as both your username and password.           </div>
           <q-btn-group spread unelevated
-            ><q-btn size="lg" @click="downloadFile()"  label="Generate and download your identity" color="primary"/>
+            ><q-btn size="lg" @click="downloadFile()"  label="Generate and download your identity" color="green"/>
           </q-btn-group
           >
         </div>
       </q-card-section>
       DON'T LOOSE THE FILE. THERE IS NO RESET PASSWORD!
-
-      <q-form @submit="proceed">
-        <q-card-section class="key-entry">
-          <h2 class="text-subtitle2">enter your key</h2>
-          <q-btn-group spread unelevated>
-            <q-btn
-              size="sm"
-              color="primary"
-              label="public key"
-              :outline="!watchOnly"
-              value="true"
-              @click="watchOnly = true"
-              :disable="isBech32Sec"
-            />
-            <q-btn
-              size="sm"
-              color="primary"
-              label="private key"
-              :outline="watchOnly"
-              value="false"
-              @click="watchOnly = false"
-              :disable="isBech32Pub"
-            />
-          </q-btn-group>
-          <q-input
-            v-model="key"
-            ref="keyInput"
-            bottom-slots
-            outlined
-            :label="watchOnly ? 'enter public key' : 'enter private key'"
-            dense
+      <div id="app">
+          <div class="q-btn">
+If you have an identity file already generate you can upload it here         </div>
+          <q-btn-group spread unelevated
+            ><q-btn color="red" size="lg"   label="Upload your identity file" />
+          </q-btn-group
           >
-            <template #hint>
-              <p v-if="!key && watchOnly">
-                entering public key means you will need to enter private key
-                each time you post content (either manually or by Nostr browser
-                extension)
-              </p>
-              <p v-if="!key && !watchOnly">
-                entering private key means astral will automatically sign with
-                your private key each time you post content
-              </p>
-              <p v-if="key && !isKeyValid">
-                not a valid NOSTR key or Twitter credentials missing
-              </p>
-              <p v-if="isKeyValid">
-                key is valid and Twitter credentials valid
-              </p>
-            </template>
-
-            <template #append>
-              <q-btn
-                v-if="hasExtension && !isKeyValid"
-                size="sm"
-                color="primary"
-                outline
-                @click="getFromExtension"
-              >
-                Use Public Key from Extension
-              </q-btn>
-
-              <q-btn
-                type="submit"
-                unelevated
-                size="sm"
-                color="positive"
-                :label="isKeyValid ? 'proceed' : ''"
-                icon-right="login"
-                @click="proceed"
-                :disabled="!isKeyValid"
-              ></q-btn>
-            </template>
-          </q-input>
-        </q-card-section>
-      </q-form>
-
+        </div>
       <div v-if="isBeck32Key(key)">
         {{ hexKey }}
       </div>
@@ -130,20 +62,12 @@ export default defineComponent({
 
   data() {
     return {
-      investorsList: [
-        {
+      credendtials: {
           id: 0,
           name: 'Gautam',
-          email: 'gautam@example.com',
-          investment: 'Stocks',
+          private_key: generatePrivateKey(),
+          public_key: 'Stocks',
         },
-        {
-          id: 1,
-          name: 'Sam',
-          email: 'sam@example.com',
-          investment: 'Bonds',
-        },
-      ],
       watchOnly: false,
       key: null,
       CONSUMER_KEY: null,
@@ -215,9 +139,9 @@ export default defineComponent({
 
   methods: {
     downloadFile() {
-      const data = this.investorsList
-      const fileName = 'np-data'
-      const exportType = exportFromJSON.types.csv
+      const data = this.credendtials
+      const fileName = 'nostr_credentials.json'
+      const exportType = exportFromJSON.types.json
 
       if (data) exportFromJSON({ data, fileName, exportType })
     },
