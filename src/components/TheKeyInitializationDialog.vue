@@ -6,34 +6,20 @@
         <BaseMarkdown>
           twastral is a decentralized, censorship resistant social platform
           powered by the [Nostr](https://github.com/fiatjaf/nostr) protocol. All
-          your Tweets get posted to both Nostr AND Twitter, therefore protecting
-          you against cancellation:
+          your messages get posted to  Nostr, therefore protecting
+          you against cancellation.
         </BaseMarkdown>
 
-
-          <div id="app">
-            <div @click="downloadFile()" class="q-btn">Generate and download your identity</div>
-            <div v-for="(investor, i) in investorsList" :key="i">
-
-            </div>
-          </div>
-
+        <div id="app">
+          <div class="q-btn">
+To signup just push the button below to generate an identity, which downloads a small file, which serves as both your username and password.           </div>
+          <q-btn-group spread unelevated
+            ><q-btn size="lg" @click="downloadFile()"  label="Generate and download your identity" color="primary"/>
+          </q-btn-group
+          >
+        </div>
       </q-card-section>
-      <q-card-section class="onboard">
-        <p>
-          if you don't have a Nostr key pair you can either
-          <strong>generate</strong> a new key pair or just take a
-          <strong>look around</strong>.
-        </p>
-        <q-btn-group spread unelevated class="q-gutter-xl">
-          <q-btn size="sm" outline @click="generate" color="primary">
-            generate
-          </q-btn>
-          <q-btn size="sm" outline color="primary" :to="{ name: 'feed' }">
-            look around
-          </q-btn>
-        </q-btn-group>
-      </q-card-section>
+      DON'T LOOSE THE FILE. THERE IS NO RESET PASSWORD!
 
       <q-form @submit="proceed">
         <q-card-section class="key-entry">
@@ -158,8 +144,6 @@ export default defineComponent({
           investment: 'Bonds',
         },
       ],
-      myUrl: '#somewhere',
-      myFilename: 'something',
       watchOnly: false,
       key: null,
       CONSUMER_KEY: null,
@@ -180,8 +164,7 @@ export default defineComponent({
     },
 
     isKeyKey() {
-      if (this.isKey(this.hexKey))
-        return true
+      if (this.isKey(this.hexKey)) return true
       return false
     },
 
